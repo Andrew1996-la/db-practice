@@ -7,17 +7,7 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-type Sale struct {
-	Product int
-	Volume  int
-	Date    string
-}
-
-func (s Sale) String() string {
-	return fmt.Sprintf("Product: %d Volume: %d Date:%s", s.Product, s.Volume, s.Date)
-}
-
-func selectSales(client int) ([]Sale, error) {
+func main() {
 	db, err := sql.Open("sqlite", "demo.db")
 
 	if err != nil {
@@ -25,35 +15,16 @@ func selectSales(client int) ([]Sale, error) {
 	}
 	defer db.Close()
 
-	var sales []Sale
-
-	query := `
-		SELECT product, volume, date FROM sales WHERE id = ?;
-	`
-
-	rows, err := db.Query(query, client)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	for rows.Next() {
-		var sale Sale
-
-		err := rows.Scan(&sale.Product, &sale.Volume, &sale.Date)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		sales = append(sales, sale)
-	}
-
-	return sales, nil
-}
-
-func main() {
+	// для выборки
 	clientId := 208
 
-	sales, err := selectSales(clientId)
+	// для создания
+	productName := "Облачное хранилище"
+	productPrice := 300
+
+	createProduct(db, productName, productPrice)
+
+	sales, err := selectSales(clientId, db)
 	if err != nil {
 		fmt.Println(err)
 		return
