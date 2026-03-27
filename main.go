@@ -7,23 +7,17 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-type Product struct {
-	id      int
-	product string
-	price   int
+type Sale struct {
+	Product int
+	Volume  int
+	Date    string
 }
 
-func (p Product) String() string {
-	fmt.Println("================================")
-	return fmt.Sprintf(
-		"ID: %d\nProduct: %s\nPrice: %d\n",
-		p.id,
-		p.product,
-		p.price,
-	)
+func (s Sale) String() string {
+	return fmt.Sprintf("Product: %d Volume: %d Date:%s", s.Product, s.Volume, s.Date)
 }
 
-func main() {
+func selectSales(client int) ([]Sale, error) {
 	db, err := sql.Open("sqlite", "demo.db")
 
 	if err != nil {
@@ -31,25 +25,42 @@ func main() {
 	}
 	defer db.Close()
 
+	var sales []Sale
+
 	query := `
-		SELECT id, product, price FROM products;
+		SELECT product, volume, date FROM sales WHERE id = ?;
 	`
 
-	rows, _ := db.Query(query)
+	rows, err := db.Query(query, client)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	for rows.Next() {
-		var product Product
+		var sale Sale
 
-		err := rows.Scan(
-			&product.id,
-			&product.product,
-			&product.price,
-		)
-
+		err := rows.Scan(&sale.Product, &sale.Volume, &sale.Date)
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
 		}
 
-        fmt.Println(product)
+		sales = append(sales, sale)
 	}
+
+	return sales, nil
+}
+
+func main() {
+	clientId := 208
+
+	sales, err := selectSales(clientId)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, sale := range sales {
+		fmt.Println(sale)
+	}
+
 }
