@@ -1,11 +1,11 @@
-package main
+package products
 
 import (
 	"database/sql"
 	"fmt"
 )
 
-func createProduct(db *sql.DB, productName string, productPrice int) {
+func CreateProduct(db *sql.DB, productName string, productPrice int) {
 	query := `
 		INSERT INTO products (product, price) VALUES (:product, :price);
 	`

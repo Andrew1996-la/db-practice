@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	"db-practice/clients"
 
 	_ "modernc.org/sqlite"
 )
@@ -15,23 +15,24 @@ func main() {
 	}
 	defer db.Close()
 
-	// для выборки
-	clientId := 208
-
-	// для создания
-	productName := "Облачное хранилище"
-	productPrice := 300
-
-	createProduct(db, productName, productPrice)
-
-	sales, err := selectSales(clientId, db)
-	if err != nil {
-		fmt.Println(err)
-		return
+	// для клиента
+	newClient := clients.Client{
+		FIO:      "Зубенко Михаил Петрович",
+		Login:    "Mafioznik777",
+		Birthday: "19850604",
+		Email:    "vor777@mail.ru",
 	}
 
-	for _, sale := range sales {
-		fmt.Println(sale)
-	}
+	// добавление клиента
+	clientId, err := clients.Insert(db, newClient)
+	clients.SelectById(db, clientId)
+
+	// изменение логина
+	err = clients.UpdateLogin(db, "777Mafioznik777", clientId)
+	clients.SelectById(db, clientId)
+
+	// // удаление клиента
+	err = clients.DeleteClient(db, clientId)
+	clients.SelectById(db, clientId)
 
 }

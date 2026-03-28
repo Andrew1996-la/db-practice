@@ -1,4 +1,4 @@
-package main
+package sales
 
 import (
 	"database/sql"
@@ -15,7 +15,7 @@ func (s Sale) String() string {
 	return fmt.Sprintf("Product: %d Volume: %d Date:%s", s.Product, s.Volume, s.Date)
 }
 
-func selectSales(client int, db *sql.DB) ([]Sale, error) {
+func SelectSales(client int, db *sql.DB) ([]Sale, error) {
 	var sales []Sale
 
 	query := `
