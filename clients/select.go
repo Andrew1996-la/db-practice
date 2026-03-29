@@ -5,16 +5,17 @@ import (
 	"fmt"
 )
 
-func SelectById(db *sql.DB, id int64) {
+func SelectById(db *sql.DB, id int) (Client, error) {
 	client := Client{}
 
 	query := `
-		SELECT fio, login, birthday, email FROM clients WHERE id = :id;
+		SELECT id, fio, login, birthday, email FROM clients WHERE id = :id;
 	`
 
 	row := db.QueryRow(query, sql.Named("id", id))
 
 	err := row.Scan(
+		&client.Id,
 		&client.FIO,
 		&client.Login,
 		&client.Birthday,
@@ -23,8 +24,8 @@ func SelectById(db *sql.DB, id int64) {
 
 	if err != nil {
 		fmt.Println(err)
-		return
+		return client, err
 	}
 
-	fmt.Println(client)
+	return client, nil
 }

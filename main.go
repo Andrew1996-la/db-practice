@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"db-practice/clients"
+	"fmt"
 
 	_ "modernc.org/sqlite"
 )
@@ -25,14 +26,16 @@ func main() {
 
 	// добавление клиента
 	clientId, err := clients.Insert(db, newClient)
-	clients.SelectById(db, clientId)
+	client, err := clients.SelectById(db, clientId)
+	fmt.Println(client)
 
-	// изменение логина
+	// // изменение логина
 	err = clients.UpdateLogin(db, "777Mafioznik777", clientId)
-	clients.SelectById(db, clientId)
+	client, err = clients.SelectById(db, clientId)
+	fmt.Println(client)
 
-	// // удаление клиента
+	// // // удаление клиента
 	err = clients.DeleteClient(db, clientId)
-	clients.SelectById(db, clientId)
-
+	client, err = clients.SelectById(db, clientId)
+	fmt.Println(client)
 }

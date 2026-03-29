@@ -2,7 +2,7 @@ package clients
 
 import "database/sql"
 
-func UpdateLogin(db *sql.DB, login string, id int64) error {
+func UpdateLogin(db *sql.DB, login string, id int) error {
 	query := `
 		UPDATE clients SET login = :login WHERE id = :id;
 	`

@@ -2,7 +2,7 @@ package clients
 
 import "database/sql"
 
-func DeleteClient(db *sql.DB, id int64) error {
+func DeleteClient(db *sql.DB, id int) error {
 	query := `
 		DELETE FROM clients WHERE id = :id;
 	`

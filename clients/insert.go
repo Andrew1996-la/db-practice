@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func Insert(db *sql.DB, client Client) (int64, error) {
+func Insert(db *sql.DB, client Client) (int, error) {
 	query := `
 		INSERT INTO clients (fio, login, birthday, email) VALUES(:fio,:login,:birthday,:email);
 	`
@@ -23,5 +23,11 @@ func Insert(db *sql.DB, client Client) (int64, error) {
 		return 0, nil
 	}
 
-	return res.LastInsertId()
+	id, err := res.LastInsertId()
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
 }
